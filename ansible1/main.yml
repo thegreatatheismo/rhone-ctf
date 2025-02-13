@@ -1,0 +1,51 @@
+---
+- name: Create users on server2
+  hosts: server2
+  become: yes
+  tasks:
+    - name: Create users
+      user:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - Annabelle
+        - Bob
+        - Carl
+        - Dyson
+        - Evert
+        - Frank
+        - Gerry
+        - Harold
+        - Isabella
+        - Jameson
+
+    - name: Create groups
+      group:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - Sales
+        - Support
+        - Services
+        - IT
+
+    - name: Create users with SSH key and add to respective groups
+      user:
+        name: "{{ item.name }}"
+        group: "{{ item.group }}"
+        shell: /bin/bash
+        state: present
+        ssh_authorized_keys:
+          - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
+      loop:
+        - { name: "Frank", group: "Sales" }
+        - { name: "Annabelle", group: "Sales" }
+        - { name: "Carl", group: "Support" }
+        - { name: "Dyson", group: "Support" }
+        - { name: "Gerry", group: "Support" }
+        - { name: "Jameson", group: "Services" }
+        - { name: "Isabella", group: "Services" }
+        - { name: "Harold", group: "IT" }
+        - { name: "Evert", group: "IT" }
+        - { name: "Bob", group: "IT" }
+
