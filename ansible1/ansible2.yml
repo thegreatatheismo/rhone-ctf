@@ -1,0 +1,10 @@
+---
+- name: Set up separate drive for IT group on server2
+  hosts: server2
+  become: yes
+  tasks:
+
+    - name: Create a 1GB partition on /dev/nvme1n1
+      file:
+        path: /etc/file
+        state: file
