@@ -35,8 +35,6 @@
         group: "{{ item.group }}"
         shell: /bin/bash
         state: present
-        ssh_authorized_keys:
-          - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
       loop:
         - { name: "Frank", group: "Sales" }
         - { name: "Annabelle", group: "Sales" }
@@ -48,4 +46,65 @@
         - { name: "Harold", group: "IT" }
         - { name: "Evert", group: "IT" }
         - { name: "Bob", group: "IT" }
+
+    - name: Add SSH key for Annabelle
+      authorized_key:
+        user: Annabelle
+        state: present
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
+
+    - name: Add SSH key for Bob
+      authorized_key:
+        user: Bob
+        state: present
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
+
+    - name: Add SSH key for Carl
+      authorized_key:
+        user: Carl
+        state: present
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
+
+    - name: Add SSH key for Dyson
+      authorized_key:
+        user: Dyson
+        state: present
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
+
+    - name: Add SSH key for Evert
+      authorized_key:
+        user: Evert
+        state: present
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
+
+    - name: Add SSH key for Frank
+      authorized_key:
+        user: Frank
+        state: present
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
+
+    - name: Add SSH key for Gerry
+      authorized_key:
+        user: Gerry
+        state: present
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
+
+    - name: Add SSH key for Harold
+      authorized_key:
+        user: Harold
+        state: present
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
+
+    - name: Add SSH key for Isabella
+      authorized_key:
+        user: Isabella
+        state: present
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
+
+    - name: Add SSH key for Jameson
+      authorized_key:
+        user: Jameson
+        state: present
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
+
 
