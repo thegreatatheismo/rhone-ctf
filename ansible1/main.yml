@@ -1,110 +1,34 @@
 ---
-- name: Create users on server2
+- name: Set up separate drive for IT group on server2
   hosts: server2
   become: yes
   tasks:
-    - name: Create users
-      user:
-        name: "{{ item }}"
+
+    - name: Create a 1GB partition on /dev/nvme1n1
+      parted:
+        device: /dev/nvme1n1
+        label: gpt
+        number: 1
+        size: 1GB
         state: present
-      loop:
-        - Annabelle
-        - Bob
-        - Carl
-        - Dyson
-        - Evert
-        - Frank
-        - Gerry
-        - Harold
-        - Isabella
-        - Jameson
+        part_type: primary
+        align: optimal
 
-    - name: Create groups
-      group:
-        name: "{{ item }}"
-        state: present
-      loop:
-        - Sales
-        - Support
-        - Services
-        - IT
+    - name: Format the partition with XFS filesystem
+      filesystem:
+        fstype: xfs
+        dev: /dev/nvme1n1p1
 
-    - name: Create users with SSH key and add to respective groups
-      user:
-        name: "{{ item.name }}"
-        group: "{{ item.group }}"
-        shell: /bin/bash
-        state: present
-      loop:
-        - { name: "Frank", group: "Sales" }
-        - { name: "Annabelle", group: "Sales" }
-        - { name: "Carl", group: "Support" }
-        - { name: "Dyson", group: "Support" }
-        - { name: "Gerry", group: "Support" }
-        - { name: "Jameson", group: "Services" }
-        - { name: "Isabella", group: "Services" }
-        - { name: "Harold", group: "IT" }
-        - { name: "Evert", group: "IT" }
-        - { name: "Bob", group: "IT" }
+    - name: Create the mount point directory /extdrive
+      file:
+        path: /extdrive
+        state: directory
+        mode: '0750'
 
-    - name: Add SSH key for Annabelle
-      authorized_key:
-        user: Annabelle
-        state: present
-        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
-
-    - name: Add SSH key for Bob
-      authorized_key:
-        user: Bob
-        state: present
-        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
-
-    - name: Add SSH key for Carl
-      authorized_key:
-        user: Carl
-        state: present
-        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
-
-    - name: Add SSH key for Dyson
-      authorized_key:
-        user: Dyson
-        state: present
-        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
-
-    - name: Add SSH key for Evert
-      authorized_key:
-        user: Evert
-        state: present
-        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
-
-    - name: Add SSH key for Frank
-      authorized_key:
-        user: Frank
-        state: present
-        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
-
-    - name: Add SSH key for Gerry
-      authorized_key:
-        user: Gerry
-        state: present
-        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
-
-    - name: Add SSH key for Harold
-      authorized_key:
-        user: Harold
-        state: present
-        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
-
-    - name: Add SSH key for Isabella
-      authorized_key:
-        user: Isabella
-        state: present
-        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
-
-    - name: Add SSH key for Jameson
-      authorized_key:
-        user: Jameson
-        state: present
-        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
-
-
+    - name: Add the partition to /etc/fstab for auto-mounting
+      mount:
+        path: /extdrive
+        src: /dev/nvme1n1p1
+        fstype: xfs
+        opts: defaults
+        state: mounted
