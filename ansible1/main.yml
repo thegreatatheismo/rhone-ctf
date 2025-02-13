@@ -5,7 +5,7 @@
   tasks:
 
     - name: Create a 1GB partition on /dev/nvme1n1
-      parted:
+      community.general.parted:
         device: /dev/nvme1n1
         label: gpt
         number: 1
