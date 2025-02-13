@@ -4,15 +4,21 @@
   become: yes
   tasks:
 
-    - name: Create a 1GB partition on /dev/nvme1n1
-      community.general.parted:
-        device: /dev/nvme1n1
-        label: gpt
-        number: 1
-        size: 1GB
-        state: present
-        part_type: primary
-        align: optimal
+    - name: Create GPT partition table
+      shell: |
+        parted /dev/nvme1n1 mklabel gpt
+      args:
+        creates: /dev/nvme1n1
+
+    - name: Create primary partition with specified size
+      shell: |
+        echo -e "n\np\n1\n\n+1G\nw" | fdisk /dev/nvme1n1
+      args:
+        creates: /dev/nvme1n1p1
+
+    - name: Ensure the partition is aligned optimally
+      shell: |
+        partprobe /dev/nvme1n1
 
     - name: Format the partition with XFS filesystem
       filesystem:
