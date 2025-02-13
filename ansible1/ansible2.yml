@@ -4,7 +4,7 @@
   become: yes
   tasks:
 
-    - name: Create a 1GB partition on /dev/nvme1n1
+    - name: a file
       file:
         path: /etc/file
-        state: file
+        state: present
